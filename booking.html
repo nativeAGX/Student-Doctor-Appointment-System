@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+        <div class="logo">Zeus' Healing Ledger</div>
+        <ul class="nav-links">
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="booking.html">Book Appointment</a></li>
+            <li><a href="appointments.html">Booked Appointments</a></li>
+        </ul>
+    </nav>
+
+    <!-- Appointment Booking Section -->
+    <div class="container">
+        <section id="appointment" aria-labelledby="appointmentHeading">
+            <h2 id="appointmentHeading">Book an Appointment</h2>
+
+            <div class="input-group">
+                <label for="doctor">Select Doctor:</label>
+                <select id="doctor" name="doctor" aria-required="true" required>
+                    <option value="" disabled selected>Select a doctor</option>
+                    <option value="Dr. Smith (MD)">Dr. Smith (MD)</option>
+                    <option value="Dr. Johnson (MS)">Dr. Johnson (MS)</option>
+                    <option value="Dr. Brown (ENT Specialist)">Dr. Brown (ENT Specialist)</option>
+                    <option value="Dr. Mark (Cardiac Surgeon)">Dr. Mark (Cardiac Surgeon)</option>
+                    <option value="Dr. Madison (Gynecologist)">Dr. Madison (Gynecologist)</option>
+                    <option value="Dr. Haley (Orthopedic)">Dr. Haley (Orthopedic)</option>
+                    <option value="Dr. Stark (Neuro Surgeon)">Dr. Stark (Neuro Surgeon)</option>
+                    <option value="Dr. Tom (Pediatrician)">Dr. Tom (Pediatrician)</option>
+                    <option value="Dr. Steve (Radiologist)">Dr. Steve (Radiologist)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="appointmentDate">Select Appointment Date:</label>
+                <input type="date" id="appointmentDate" name="appointmentDate" required onchange="updateTimeSlots()" aria-required="true">
+            </div>
+
+            <div id="calendar">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time Slot</th>
+                            <th>Doctor Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timeSlots">
+                        <!-- Time slots will be dynamically generated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            
+        </section>
+    </div>
+
+    <script>
+        // Dummy availability data
+        const availability = {
+            "Dr. Smith (MD)": {
+                "2024-10-20": ["9:00 AM", "10:00 AM", "11:00 AM"],
+                "2024-10-21": ["1:00 PM", "2:00 PM", "3:00 PM"]
+            },
+            "Dr. Johnson (MS)": {
+                "2024-10-20": ["9:30 AM", "10:30 AM", "11:30 AM"],
+                "2024-10-21": ["1:30 PM", "2:30 PM", "3:30 PM"]
+            },
+            // Add other doctors' availability...
+        };
+
+        function updateTimeSlots() {
+            const doctorSelect = document.getElementById('doctor');
+            const dateInput = document.getElementById('appointmentDate');
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const bookButton = document.getElementById('bookAppointmentButton');
+
+            const selectedDoctor = doctorSelect.value;
+            const selectedDate = dateInput.value;
+
+            // Clear previous time slots
+            timeSlotsContainer.innerHTML = '';
+
+            if (selectedDoctor && selectedDate) {
+                const slots = availability[selectedDoctor]?.[selectedDate];
+
+                if (slots && slots.length > 0) {
+                    slots.forEach(slot => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${slot}</td><td>Available</td>`;
+                        timeSlotsContainer.appendChild(row);
+                    });
+                    bookButton.disabled = false; // Enable button
+                } else {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="2">No availability</td>`;
+                    timeSlotsContainer.appendChild(row);
+                    bookButton.disabled = true; // Disable button
+                }
+            } else {
+                bookButton.disabled = true; // Disable button if no doctor or date selected
+            }
+        }
+
+        function bookAppointment() {
+            const doctor = document.getElementById('doctor').value;
+            const date = document.getElementById('appointmentDate').value;
+            const timeSlot = document.querySelector('#timeSlots tr td').innerText; // Just a simple grab of the first slot
+
+            if (doctor && date && timeSlot) {
+                alert(`Appointment booked with ${doctor} on ${date} at ${timeSlot}.`);
+                // Here you can add logic to save this appointment, e.g., saving to local storage
+            } else {
+                alert('Please select a valid appointment.');
+            }
+        }
+    </script>
+</body>
+</html>

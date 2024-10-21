@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booked Appointments</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+        <div class="logo">Zeus' Healing Ledger</div>
+        <ul class="nav-links">
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="booking.html">Book Appointment</a></li>
+            <li><a href="appointments.html">Booked Appointments</a></li>
+        </ul>
+    </nav>
+
+    <!-- Appointments Section -->
+    <div class="container">
+        <section id="appointments" aria-labelledby="appointmentsHeading">
+            <h2 id="appointmentsHeading">Your Booked Appointments</h2>
+            <div id="appointmentList">
+                <!-- Appointments will be displayed here -->
+                <p>Loading appointments...</p> <!-- Placeholder while loading -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Dummy Data for Appointments
+        const bookedAppointments = JSON.parse(localStorage.getItem('bookedAppointments')) || [];
+
+        function displayAppointments() {
+            const appointmentList = document.getElementById('appointmentList');
+            // Clear loading message
+            appointmentList.innerHTML = ''; 
+
+            if (bookedAppointments.length === 0) {
+                appointmentList.innerHTML = '<p>No appointments booked.</p>';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            bookedAppointments.forEach(appointment => {
+                const li = document.createElement('li');
+                li.innerHTML = `${appointment.doctor} on ${appointment.date} at ${appointment.time}`;
+                ul.appendChild(li);
+            });
+            appointmentList.appendChild(ul);
+        }
+
+        // Call the function to display appointments
+        displayAppointments();
+    </script>
+</body>
+</html>
